@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Juventud Eben-ezer</title>
   <style>
-    /* Fondo general */
     body {
       font-family: 'Arial', sans-serif;
       margin: 0;
@@ -19,7 +18,6 @@
       overflow: hidden;
     }
 
-    /* Imagen de fondo con blur */
     body::before {
       content: "";
       position: absolute;
@@ -27,7 +25,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url('img.jpg'); /* Cambia 'img.jpg' por tu imagen si es necesario */
+      background-image: url('img.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -35,8 +33,7 @@
       z-index: -1;
     }
 
-    /* Contenedor con efecto glass */
-    .container {
+    .container, #banner {
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -57,7 +54,7 @@
       }
     }
 
-    h2 {
+    h1, h2 {
       color: #333;
       text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     }
@@ -99,10 +96,26 @@
       margin-top: 1rem;
       text-align: left;
     }
+
+    #container, #agradecimiento {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <!-- Banner inicial -->
+  <div id="banner">
+    <h1>¡Bienvenidos Juventud Eben-ezer!</h1>
+    <p style="margin-bottom: 1.5rem;">
+      🙌 Este <strong>sábado 12 de julio</strong> será un tiempo especial, ¡será un sábado diferente donde vamos a compartir todos juntos!<br><br>
+      🟡🔵🔴🟢 La idea es que cada uno, según el color que escoja, lleve <strong>un solo producto empacado</strong> para compartir.<br><br>
+      🥳 <strong>Es totalmente voluntario</strong>. Solo esperamos que puedas acompañarnos y hacer parte de este día especial.
+    </p>
+    <button onclick="mostrarFormulario()">Estoy listo 🎉</button>
+  </div>
+
+  <!-- Formulario de selección -->
+  <div class="container" id="container">
     <h2>Selecciona tu equipo Eben-ezer</h2>
     <select id="equipo">
       <option value="">-- Selecciona un color --</option>
@@ -115,18 +128,17 @@
 
     <div id="mensaje-azul" class="mensaje">
       <strong>🔵 Equipo Azul</strong>
-      <p> Lleva uno de estos 😎 </p>
+      <p>Lleva uno de estos 😎</p>
       <ul>
-        <li>Papas Margarita</li>
-        <li>Rizadas</li>
+        <li>Papas de limon</li>
         <li>Gaseosa Pepsi</li>
-        <li>Papas Lays</li>
+        <li>Papas de pollo</li>
       </ul>
     </div>
 
     <div id="mensaje-rojo" class="mensaje">
       <strong>🔴 Equipo Rojo</strong>
-      <p> Lleva uno de estos 😎 </p>
+      <p>Lleva uno de estos 😎</p>
       <ul>
         <li>Doritos</li>
         <li>Chitos</li>
@@ -137,9 +149,9 @@
 
     <div id="mensaje-verde" class="mensaje">
       <strong>🟢 Equipo Verde</strong>
-      <p> Lleva uno de estos 😎 </p>
+      <p>Lleva uno de estos 😎</p>
       <ul>
-        <li>De Todito BBQ</li>
+        <li>De Todito</li>
         <li>Cheetos</li>
         <li>Gaseosa Pepsi</li>
         <li>Choclitos</li>
@@ -148,7 +160,7 @@
 
     <div id="mensaje-amarillo" class="mensaje">
       <strong>🟡 Equipo Amarillo</strong>
-      <p> Lleva uno de estos 😎 </p>
+      <p>Lleva uno de estos 😎</p>
       <ul>
         <li>Cheese Tris</li>
         <li>De Todito</li>
@@ -158,17 +170,17 @@
     </div>
   </div>
 
+  <!-- Banner final de agradecimiento -->
+  <div id="agradecimiento" class="container">
+    <h2>¡Gracias! 💙</h2>
+    <p id="resumen"></p>
+  </div>
+
   <script>
-    // Al cargar la página, revisa si ya eligió
-    window.onload = function() {
-      const equipoGuardado = localStorage.getItem("equipoElegido");
-      if (equipoGuardado) {
-        mostrarMensaje(equipoGuardado);
-        document.getElementById("equipo").disabled = true;
-        document.getElementById("btn").disabled = true;
-        document.getElementById("btn").innerText = "Respuesta mostrada";
-      }
-    };
+    function mostrarFormulario() {
+      document.getElementById("banner").style.display = "none";
+      document.getElementById("container").style.display = "block";
+    }
 
     function mostrarMensaje(equipoSeleccionado = null) {
       const select = document.getElementById('equipo');
@@ -186,10 +198,37 @@
 
       document.querySelectorAll('.mensaje').forEach(m => m.style.display = 'none');
       document.getElementById(`mensaje-${equipo}`).style.display = 'block';
+
       select.disabled = true;
       boton.disabled = true;
       boton.innerText = 'Respuesta mostrada';
+
+      mostrarBannerFinal(equipo);
     }
+
+    function mostrarBannerFinal(equipo) {
+      const resumen = {
+        azul: "🔵 Equipo Azul: puedes llevar Papas de limon, Gaseosa Pepsi o Papas de pollo.",
+        rojo: "🔴 Equipo Rojo: puedes llevar Doritos, Chitos, Mix BBQ o Platanitos.",
+        verde: "🟢 Equipo Verde: puedes llevar De Todito, Cheetos, Gaseosa Pepsi o Choclitos.",
+        amarillo: "🟡 Equipo Amarillo: puedes llevar Cheese Tris, De Todito, Doritos o Papas naturales."
+      };
+
+      document.getElementById("container").style.display = "none";
+      document.getElementById("agradecimiento").style.display = "block";
+      document.getElementById("resumen").innerText = resumen[equipo] + " Recuerda que es solo un ítem. ¡Nos vemos el sábado!";
+    }
+
+    window.onload = function() {
+      const equipoGuardado = localStorage.getItem("equipoElegido");
+      if (equipoGuardado) {
+        mostrarFormulario();
+        mostrarMensaje(equipoGuardado);
+        document.getElementById("equipo").disabled = true;
+        document.getElementById("btn").disabled = true;
+        document.getElementById("btn").innerText = "Respuesta mostrada";
+      }
+    };
   </script>
 </body>
 </html>

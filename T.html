@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selección de Equipos</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 400px;
+    }
+    select, button {
+      padding: 0.6rem;
+      font-size: 1rem;
+      width: 100%;
+      margin: 1rem 0;
+    }
+    .mensaje {
+      display: none;
+      margin-top: 1rem;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Selecciona tu equipo</h2>
+    <select id="equipo">
+      <option value="">-- Selecciona un color --</option>
+      <option value="azul">🔵 Azul</option>
+      <option value="rojo">🔴 Rojo</option>
+      <option value="verde">🟢 Verde</option>
+      <option value="amarillo">🟡 Amarillo</option>
+    </select>
+    <button onclick="mostrarMensaje()" id="btn">Ver lo que debo llevar</button>
+
+    <div id="mensaje-azul" class="mensaje">
+      <strong>🔵 Equipo Azul</strong>
+      <p>Lleva uno de estos pasabocas empacados:</p>
+      <ul>
+        <li>Papas Margarita</li>
+        <li>Rizadas</li>
+        <li>De Todito</li>
+        <li>Papas Lays</li>
+      </ul>
+    </div>
+
+    <div id="mensaje-rojo" class="mensaje">
+      <strong>🔴 Equipo Rojo</strong>
+      <p>Lleva uno de estos pasabocas empacados:</p>
+      <ul>
+        <li>Doritos (queso o picante)</li>
+        <li>Chitos</li>
+        <li>Mix BBQ</li>
+        <li>Maíz tostado</li>
+      </ul>
+    </div>
+
+    <div id="mensaje-verde" class="mensaje">
+      <strong>🟢 Equipo Verde</strong>
+      <p>Lleva uno de estos pasabocas empacados:</p>
+      <ul>
+        <li>De Todito BBQ</li>
+        <li>Cheetos</li>
+        <li>Papas criollas</li>
+        <li>Maní salado</li>
+      </ul>
+    </div>
+
+    <div id="mensaje-amarillo" class="mensaje">
+      <strong>🟡 Equipo Amarillo</strong>
+      <p>Lleva uno de estos pasabocas empacados:</p>
+      <ul>
+        <li>Platanitos</li>
+        <li>Arepitas crocantes</li>
+        <li>Maíz pira empacado</li>
+        <li>Papas naturales</li>
+      </ul>
+    </div>
+  </div>
+
+<script>
+  // Al cargar la página, revisa si ya eligió
+  window.onload = function() {
+    const equipoGuardado = localStorage.getItem("equipoElegido");
+    if (equipoGuardado) {
+      mostrarMensaje(equipoGuardado);
+      document.getElementById("equipo").disabled = true;
+      document.getElementById("btn").disabled = true;
+      document.getElementById("btn").innerText = "Respuesta mostrada";
+    }
+  };
+
+  function mostrarMensaje(equipoSeleccionado = null) {
+    const select = document.getElementById('equipo');
+    const boton = document.getElementById('btn');
+    const equipo = equipoSeleccionado || select.value;
+
+    if (!equipo) {
+      alert('Por favor selecciona un color primero.');
+      return;
+    }
+
+    // Guarda la selección si es la primera vez
+    if (!equipoSeleccionado) {
+      localStorage.setItem("equipoElegido", equipo);
+    }
+
+    // Oculta todos
+    document.querySelectorAll('.mensaje').forEach(m => m.style.display = 'none');
+
+    // Muestra solo el elegido
+    document.getElementById(`mensaje-${equipo}`).style.display = 'block';
+
+    // Bloquea cambios
+    select.disabled = true;
+    boton.disabled = true;
+    boton.innerText = 'Respuesta mostrada';
+  }
+</script>
+</body>
+</html>

@@ -5,33 +5,95 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Juventud Eben-ezer</title>
   <style>
+    /* Fondo general */
     body {
       font-family: 'Arial', sans-serif;
-      background-image: url('img.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
       margin: 0;
       padding: 0;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-}
+      background: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Imagen de fondo con blur */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('img.jpg'); /* Cambia 'img.jpg' por tu imagen si es necesario */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: blur(8px);
+      z-index: -1;
+    }
+
+    /* Contenedor con efecto glass */
     .container {
-      background: white;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
       text-align: center;
       max-width: 400px;
+      width: 90%;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: fadeIn 1s ease forwards;
+      opacity: 0;
     }
-    select, button {
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    h2 {
+      color: #333;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    select {
       padding: 0.6rem;
       font-size: 1rem;
       width: 100%;
       margin: 1rem 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
     }
+
+    button {
+      padding: 0.6rem;
+      font-size: 1rem;
+      width: 100%;
+      margin: 1rem 0;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    button:disabled {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+
     .mensaje {
       display: none;
       margin-top: 1rem;
@@ -49,7 +111,7 @@
       <option value="verde">🟢 Verde</option>
       <option value="amarillo">🟡 Amarillo</option>
     </select>
-    <button onclick="mostrarMensaje()" id="btn">Ver lo que debo llevar</button>
+    <button onclick="mostrarMensaje()" id="btn"> 👀 Ver </button>
 
     <div id="mensaje-azul" class="mensaje">
       <strong>🔵 Equipo Azul</strong>
@@ -96,44 +158,38 @@
     </div>
   </div>
 
-<script>
-  // Al cargar la página, revisa si ya eligió
-  window.onload = function() {
-    const equipoGuardado = localStorage.getItem("equipoElegido");
-    if (equipoGuardado) {
-      mostrarMensaje(equipoGuardado);
-      document.getElementById("equipo").disabled = true;
-      document.getElementById("btn").disabled = true;
-      document.getElementById("btn").innerText = "Respuesta mostrada";
+  <script>
+    // Al cargar la página, revisa si ya eligió
+    window.onload = function() {
+      const equipoGuardado = localStorage.getItem("equipoElegido");
+      if (equipoGuardado) {
+        mostrarMensaje(equipoGuardado);
+        document.getElementById("equipo").disabled = true;
+        document.getElementById("btn").disabled = true;
+        document.getElementById("btn").innerText = "Respuesta mostrada";
+      }
+    };
+
+    function mostrarMensaje(equipoSeleccionado = null) {
+      const select = document.getElementById('equipo');
+      const boton = document.getElementById('btn');
+      const equipo = equipoSeleccionado || select.value;
+
+      if (!equipo) {
+        alert('Por favor selecciona un color primero.');
+        return;
+      }
+
+      if (!equipoSeleccionado) {
+        localStorage.setItem("equipoElegido", equipo);
+      }
+
+      document.querySelectorAll('.mensaje').forEach(m => m.style.display = 'none');
+      document.getElementById(`mensaje-${equipo}`).style.display = 'block';
+      select.disabled = true;
+      boton.disabled = true;
+      boton.innerText = 'Respuesta mostrada';
     }
-  };
-
-  function mostrarMensaje(equipoSeleccionado = null) {
-    const select = document.getElementById('equipo');
-    const boton = document.getElementById('btn');
-    const equipo = equipoSeleccionado || select.value;
-
-    if (!equipo) {
-      alert('Por favor selecciona un color primero.');
-      return;
-    }
-
-    // Guarda la selección si es la primera vez
-    if (!equipoSeleccionado) {
-      localStorage.setItem("equipoElegido", equipo);
-    }
-
-    // Oculta todos
-    document.querySelectorAll('.mensaje').forEach(m => m.style.display = 'none');
-
-    // Muestra solo el elegido
-    document.getElementById(`mensaje-${equipo}`).style.display = 'block';
-
-    // Bloquea cambios
-    select.disabled = true;
-    boton.disabled = true;
-    boton.innerText = 'Respuesta mostrada';
-  }
-</script>
+  </script>
 </body>
 </html>

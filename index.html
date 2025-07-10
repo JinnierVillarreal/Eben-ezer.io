@@ -91,28 +91,44 @@
     </div>
   </div>
 
-  <script>
-    function mostrarMensaje() {
-      const equipo = document.getElementById('equipo').value;
-      const select = document.getElementById('equipo');
-      const boton = document.getElementById('btn');
-
-      if (!equipo) {
-        alert('Por favor selecciona un color primero.');
-        return;
-      }
-
-      // Oculta todos los mensajes
-      document.querySelectorAll('.mensaje').forEach(m => m.style.display = 'none');
-
-      // Muestra solo el correspondiente
-      document.getElementById(`mensaje-${equipo}`).style.display = 'block';
-
-      // Bloquea el selector y botón
-      select.disabled = true;
-      boton.disabled = true;
-      boton.innerText = 'Respuesta mostrada';
+<script>
+  // Al cargar la página, revisa si ya eligió
+  window.onload = function() {
+    const equipoGuardado = localStorage.getItem("equipoElegido");
+    if (equipoGuardado) {
+      mostrarMensaje(equipoGuardado);
+      document.getElementById("equipo").disabled = true;
+      document.getElementById("btn").disabled = true;
+      document.getElementById("btn").innerText = "Respuesta mostrada";
     }
-  </script>
+  };
+
+  function mostrarMensaje(equipoSeleccionado = null) {
+    const select = document.getElementById('equipo');
+    const boton = document.getElementById('btn');
+    const equipo = equipoSeleccionado || select.value;
+
+    if (!equipo) {
+      alert('Por favor selecciona un color primero.');
+      return;
+    }
+
+    // Guarda la selección si es la primera vez
+    if (!equipoSeleccionado) {
+      localStorage.setItem("equipoElegido", equipo);
+    }
+
+    // Oculta todos
+    document.querySelectorAll('.mensaje').forEach(m => m.style.display = 'none');
+
+    // Muestra solo el elegido
+    document.getElementById(`mensaje-${equipo}`).style.display = 'block';
+
+    // Bloquea cambios
+    select.disabled = true;
+    boton.disabled = true;
+    boton.innerText = 'Respuesta mostrada';
+  }
+</script>
 </body>
 </html>
